@@ -1,6 +1,6 @@
 #' use R code to calculate baseline CIF
 #'
-#' Use input data, time, status,grouping variables, adjusted covariates,
+#' Internal function for adjusted CIF.  Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, the known beta as inputs
 #'
 #' @noRd
@@ -15,7 +15,7 @@
 #'
 #' @return a dataframe
 #'
-baseline_hazard_cif = function(data,time,status,group,covlist,event_code,beta){
+.baseline_hazard_cif = function(data,time,status,group,covlist,event_code,beta){
 
   EvTime0 = sort(data[[time]][data[[status]]==event_code])
   EvTimes = unique(EvTime0)

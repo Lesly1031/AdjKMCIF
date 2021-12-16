@@ -1,4 +1,4 @@
-#' use R code to calculate adjusted CIF probability (internal function)
+#' Internal functions. Use R code to calculate adjusted CIF probability
 #'
 #' Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, whether to use stratified model, and defining reference group as inputs
@@ -8,7 +8,7 @@
 #' @return a dataframe
 #'
 #'
-cif_prob = function(data,coxout,base_res,event_code,strata_group,stratified,reference_group){
+.cif_prob = function(data,coxout,base_res,event_code,strata_group,stratified,reference_group){
   ##############################################################
   # This function is to get the CIF probability
   # data: input data

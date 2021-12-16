@@ -76,7 +76,7 @@ boot_ci_adj_cif <- function(boot_n=100,ci_cut = c(0.025,0.975),data,time,status,
   ########## Step2: Calculate adjusted survival probability on each bootstrap sample####
   boot_adj_cif = function(boot_time = boot_n){
     adj_cif_prob = lapply(1:boot_time,function(x){
-      t = adj_cif(data = resample[[x]],time,status,group,covlist,event_code =event_code,stratified=stratified,reference_group=reference_group)
+      t = .adj_cif(data = resample[[x]],time,status,group,covlist,event_code =event_code,stratified=stratified,reference_group=reference_group)
       #list(data.frame(cbind(t[,1],t[,2])),data.frame(cbind(t[,1],t[,3])))
       t1 = vector(mode="list",length = ncol(t)-1)
       for(i in 1:ncol(t)-1) {

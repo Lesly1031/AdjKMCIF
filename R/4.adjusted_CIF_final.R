@@ -28,7 +28,7 @@
 #' covlist = c("z1", "z3"), event_code = 1, stratified = "Yes", reference_group = "arm:2")
 
 adjusted_CIF = function(data,time,status,group,covlist,event_code =1,stratified="Yes",reference_group="G&B"){
-  res = adj_cif(data = data,time=time,status=status,group=group,covlist=covlist,event_code=event_code,stratified=stratified,reference_group=reference_group)
+  res = .adj_cif(data = data,time=time,status=status,group=group,covlist=covlist,event_code=event_code,stratified=stratified,reference_group=reference_group)
   res$time = signif(res$time,8)
   new_time = data.frame("time"=sort(data[[time]]))
   new_time$time = signif(new_time$time,8)

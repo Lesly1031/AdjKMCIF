@@ -1,6 +1,6 @@
 #' use R code to calculate adjusted CIF
 #'
-#' Use input data, time, status,grouping variables, adjusted covariates,
+#' Internal function for adj CIF. Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, whether to use stratified model, and defining reference group as inputs
 #'
 #' @noRd
@@ -16,7 +16,7 @@
 #' @return a dataframe
 #'
 #'
-adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",reference_group=NULL){
+.adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",reference_group=NULL){
 
 ##########################################################################
 # This function is to get the adjusted CIF
@@ -116,7 +116,7 @@ adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",re
 ################ Baseline CIF ###############
   if(stratified=="No"){
     if(is.null(reference_group)){
-      CIF0 = baseline_hazard_cif(data,time,status,group,covlist,event_code=event_code,beta)
+      CIF0 = .baseline_hazard_cif(data,time,status,group,covlist,event_code=event_code,beta)
       CIF0 = data.frame(CIF0)
       names(CIF0) = c("time","CIF0")
     }else{
@@ -133,7 +133,7 @@ adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",re
       })
       CIF0 = lapply(1:length(data_sub),function(x){
         data_sub[[x]]$strata = as.character(data_sub[[x]]$strata)
-        res = baseline_hazard_cif(data_sub[[x]],"time","status","strata",cov_list,event_code=event_code,beta_stratify)
+        res = .baseline_hazard_cif(data_sub[[x]],"time","status","strata",cov_list,event_code=event_code,beta_stratify)
         res$strata = unique(indata$strata)[x]
         res
       })
@@ -208,7 +208,7 @@ adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",re
   strata_num = length(levels(coxout$strata))
 
  cif_probability = lapply(1:strata_num,function(x){
-    cif_prob(data=data,coxout=coxout,base_res=CIF0,event_code=event_code,strata_group = levels(coxout$strata)[[x]],stratified=stratified,reference_group = reference_group)
+    .cif_prob(data=data,coxout=coxout,base_res=CIF0,event_code=event_code,strata_group = levels(coxout$strata)[[x]],stratified=stratified,reference_group = reference_group)
   })
  ######################################################################
  #----------------survival probability-------------------------
