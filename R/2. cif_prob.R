@@ -3,6 +3,8 @@
 #' Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, whether to use stratified model, and defining reference group as inputs
 #'
+#' @noRd
+#'
 #' @return a dataframe
 #' @keywords internal
 #'

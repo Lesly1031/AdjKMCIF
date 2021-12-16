@@ -3,6 +3,8 @@
 #' Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, the known beta as inputs
 #'
+#' @noRd
+#'
 #' @param data input data
 #' @param time time
 #' @param status status
