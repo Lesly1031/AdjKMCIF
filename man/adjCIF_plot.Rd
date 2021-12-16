@@ -2,7 +2,7 @@
 % Please edit documentation in R/5.adjust_CIF_plot.R
 \name{adjCIF_plot}
 \alias{adjCIF_plot}
-\title{Generate adjusted CIF plot}
+\title{Generate adjusted CIF plot without CI}
 \usage{
 adjCIF_plot(res, data)
 }
@@ -12,13 +12,37 @@ adjCIF_plot(res, data)
 \item{data}{the input dataset}
 }
 \value{
-a figure
+Adjusted CIF plot will be shown after running this function
 }
 \description{
-Use results from adjusted_CIF() and input dataset as inputs
+Use results from adjusted_CIF() and input dataset to generate adjusted CIF plot (users can also produce a figure by using ggplot2)
 }
 \examples{
+
+library(KMsurv)
+data(bmt)
+bmt$arm <- bmt$group
+bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
+bmt$z3 = as.character(bmt$z3)
+
+bmt$CenCI <- 0
+for (ii in 1:137) {
+  if (bmt$d3[ii] == 0) {
+    bmt$CenCI[ii] <- 0
+  } else {
+    if (bmt$d2[ii] == 1) {
+      bmt$CenCI[ii] <- 1
+    } else {
+      bmt$CenCI[ii] <- 2
+    }
+  }
+}
+
+bmt$t2 = bmt$t2 * 12/365.25
+
+# Adjusted CIF plot without CI
 result = adjusted_CIF(data = bmt, time = "t2", status = "CenCI", group = "arm",
 covlist = c("z1", "z3"), event_code = 1, stratified = "Yes", reference_group = "arm:2")
 adjCIF_plot(result, data = bmt)
+
 }

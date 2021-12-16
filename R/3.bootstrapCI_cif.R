@@ -1,20 +1,20 @@
-#' use R code to calculate the bootstrap CI
+#' Bootstrap CI for adjusted CIF
 #'
 #' Use input data, time, status,grouping variables, adjusted covariates,
 #' events of interests, whether to use stratified model, and defining reference group as inputs
 #'
 #' @param boot_n bootstrap sample size
-#' @param ci_cut default c(0.025, 0.975) bootstrap 95% CI
+#' @param ci_cut default c(0.025, 0.975) bootstrap 95\% CI
 #' @param data the input dataset
 #' @param time column name of time variable
 #' @param status column name of event status
 #' @param group grouping variable
-#' @param covlist list of covariates that are included in the model
+#' @param covlist list of covariates that should be included in the model
 #' @param event_code event of interests
-#' @param stratified "Yes" refers to use stratified model, "No" refers to use FG
-#' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes;
+#' @param stratified "Yes" refers to use stratified model, "No" refers to use Fine and Gray regression
+#' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
 #'
-#' @return a dataframe
+#' @return Output is a dataframe with average number of adjusted CIF probabilities, as well as 2.5\% and 97.5\% percentiles.
 #' @export
 #'
 #' @examples
@@ -57,15 +57,8 @@
 
 
 boot_ci_adj_cif <- function(boot_n=100,ci_cut = c(0.025,0.975),data,time,status,group,covlist,event_code,stratified,reference_group){
-########## For test purpose, remove after complete ########
-  # data = dt
-  # time = "RFS"
-  # status = "CI_RFS"
-  # group = "Arm"
-  # covlist = c("Age","Severity")
-  # event_code =1
-############################################################
-    ########### Step1: Get bootstrap samples ################
+
+  ########### Get bootstrap samples ################
   resample = lapply(1:boot_n,function(i){
     set.seed(i)
     index = sample(1:nrow(data),replace=T)
@@ -73,7 +66,7 @@ boot_ci_adj_cif <- function(boot_n=100,ci_cut = c(0.025,0.975),data,time,status,
     dt_sample
   })
 
-  ########## Step2: Calculate adjusted survival probability on each bootstrap sample####
+  ########## Calculate adjusted survival probability on each bootstrap sample####
   boot_adj_cif = function(boot_time = boot_n){
     adj_cif_prob = lapply(1:boot_time,function(x){
       t = .adj_cif(data = resample[[x]],time,status,group,covlist,event_code =event_code,stratified=stratified,reference_group=reference_group)

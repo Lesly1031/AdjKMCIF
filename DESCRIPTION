@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Biwei Cao, Jongphil Kim
 Maintainer: Biwei Cao <biwei.cao@moffitt.org>
 Description: The R package to estimate the covariate-adjusted Kaplan-Meier and cumulative incidence functions.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:

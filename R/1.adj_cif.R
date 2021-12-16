@@ -18,31 +18,7 @@
 #'
 .adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",reference_group=NULL){
 
-##########################################################################
-# This function is to get the adjusted CIF
-# data: input data
-# time, status
-# group: grouping variable
-# covlist: adjusted covariates
-# event_code: Event of Interest
-# beta: estimate of Fine-Gray regression
-# reference_group: NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; self- defined results
-##########################################################################
-  ############ Delete this part once complete #########
-  # data = dt
-  # time = "RFS"
-  # status = "CI_RFS"
-  # group = "Arm"
-  # covlist = c("Age","Severity")
-  # event_code =1
 
-  # data = bmt
-  # time = "t2"
-  # status = "CenCI"
-  # group = "arm"
-  # covlist = c("z1","z3")
-  # event_code =1
-####################################################
   grouplist = group
   covlist = covlist
   # number of group variable (number of strata)

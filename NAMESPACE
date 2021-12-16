@@ -1,1 +1,8 @@
 exportPattern("^[[:alpha:]]+")
+import(ggplot2)
+import(zoo)
+import(tidyr)
+import(survival)
+import(riskRegression)
+import(prodlim)
+import(crrSC)

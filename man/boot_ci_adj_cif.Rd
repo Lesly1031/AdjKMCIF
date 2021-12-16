@@ -2,7 +2,7 @@
 % Please edit documentation in R/3.bootstrapCI_cif.R
 \name{boot_ci_adj_cif}
 \alias{boot_ci_adj_cif}
-\title{use R code to calculate the bootstrap CI}
+\title{Bootstrap CI for adjusted CIF}
 \usage{
 boot_ci_adj_cif(
   boot_n = 100,
@@ -20,7 +20,7 @@ boot_ci_adj_cif(
 \arguments{
 \item{boot_n}{bootstrap sample size}
 
-\item{ci_cut}{default c(0.025, 0.975) bootstrap 95% CI}
+\item{ci_cut}{default c(0.025, 0.975) bootstrap 95\% CI}
 
 \item{data}{the input dataset}
 
@@ -30,16 +30,16 @@ boot_ci_adj_cif(
 
 \item{group}{grouping variable}
 
-\item{covlist}{list of covariates that are included in the model}
+\item{covlist}{list of covariates that should be included in the model}
 
 \item{event_code}{event of interests}
 
-\item{stratified}{"Yes" refers to use stratified model, "No" refers to use FG}
+\item{stratified}{"Yes" refers to use stratified model, "No" refers to use Fine and Gray regression}
 
-\item{reference_group}{NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes;}
+\item{reference_group}{NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference}
 }
 \value{
-a dataframe
+Output is a dataframe with average number of adjusted CIF probabilities, as well as 2.5\% and 97.5\% percentiles.
 }
 \description{
 Use input data, time, status,grouping variables, adjusted covariates,
