@@ -14,7 +14,6 @@
 #' @param beta beta from FG or stratified model
 #'
 #' @return a dataframe
-#' @keywords internal
 #'
 baseline_hazard_cif = function(data,time,status,group,covlist,event_code,beta){
 

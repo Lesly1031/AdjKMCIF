@@ -6,7 +6,6 @@
 #' @noRd
 #'
 #' @return a dataframe
-#' @keywords internal
 #'
 #'
 cif_prob = function(data,coxout,base_res,event_code,strata_group,stratified,reference_group){

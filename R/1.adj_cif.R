@@ -14,7 +14,6 @@
 #' @param stratified "Yes" refers to use stratified model, "No" refers to use FG
 #' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes;
 #' @return a dataframe
-#' @keywords internal
 #'
 #'
 adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",reference_group=NULL){
