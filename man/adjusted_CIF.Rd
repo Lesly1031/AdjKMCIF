@@ -28,7 +28,7 @@ adjusted_CIF(
 
 \item{event_code}{event of interests}
 
-\item{stratified}{"Yes" refers to use stratified model, "No" refers to use Fime and Gray regression}
+\item{stratified}{"Yes" refers to use stratified model, "No" refers to use Fine and Gray regression}
 
 \item{reference_group}{NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference}
 }

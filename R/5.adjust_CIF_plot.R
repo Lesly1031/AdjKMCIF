@@ -10,6 +10,7 @@
 #'
 #' @examples
 #'
+#'
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -51,7 +52,7 @@ adjCIF_plot = function(res,data){
 #'
 #' Use results from boot_ci_adj_cif() and input dataset to generate adjusted CIF plot with bootstrap CI (users can also produce a figure by using ggplot2)
 #'
-#' @param res results from adjusted_CIF()
+#' @param res results from boot_ci_adj_cif()
 #' @param data the input dataset
 #'
 #' @return Adjusted CIF plot with CI will be shown after running this function

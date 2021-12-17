@@ -19,6 +19,7 @@ Use results from adjusted_CIF() and input dataset to generate adjusted CIF plot 
 }
 \examples{
 
+
 library(KMsurv)
 data(bmt)
 bmt$arm <- bmt$group

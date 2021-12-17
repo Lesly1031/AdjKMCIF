@@ -7,7 +7,7 @@
 adjCIF_CI_plot(res, data)
 }
 \arguments{
-\item{res}{results from adjusted_CIF()}
+\item{res}{results from boot_ci_adj_cif()}
 
 \item{data}{the input dataset}
 }

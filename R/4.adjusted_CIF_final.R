@@ -9,7 +9,7 @@
 #' @param group grouping variable
 #' @param covlist list of covariates that should be included in the model
 #' @param event_code event of interests
-#' @param stratified "Yes" refers to use stratified model, "No" refers to use Fime and Gray regression
+#' @param stratified "Yes" refers to use stratified model, "No" refers to use Fine and Gray regression
 #' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
 #'
 #' @return Output is a dataframe with adjusted CIF probabilities. If the PH assumption is invalid or if practitioners need a method by which the event time points of the adjusted function match those of the unadjusted function, the stratified model should be used (Gail and Byar and Storer et. al), otherwise, unstratified FG model can be used.
