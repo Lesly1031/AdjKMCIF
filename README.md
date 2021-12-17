@@ -10,7 +10,7 @@ The goal of AdjKM.CIF is to create the covariate-adjusted Kaplan-Meier
 and cumulative incidence functions.
 
 You could check the more specific introduction of the package at
-<https://lesly1031.github.io/AdjKM.CIF/articles/package_intro.html>
+<https://lesly1031.github.io/AdjKM.CIF/>
 
 ## Installation
 
