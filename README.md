@@ -9,6 +9,9 @@
 The goal of AdjKM.CIF is to create the covariate-adjusted Kaplan-Meier
 and cumulative incidence functions.
 
+You could check the more specific introduction of the package at
+<https://lesly1031.github.io/AdjKM.CIF/articles/package_intro.html>
+
 ## Installation
 
 You can install the development version of AdjKM.CIF from
@@ -19,20 +22,58 @@ You can install the development version of AdjKM.CIF from
 devtools::install_github("Lesly1031/AdjKM.CIF",dependencies = TRUE)
 ```
 
+## Adjusted KM examples
+
 ``` r
 library(AdjKM.CIF)
 library(tidyverse)
 library(DT)
 library(data.table)
+library(KMsurv)
 ```
+
+### Example data
+
+``` r
+data(bmt)
+bmt$arm <- bmt$group
+bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
+bmt$z3 = as.character(bmt$z3)
+bmt$t2 = bmt$t2 * 12/365.25
+```
+
+### Coxph model
+
+``` r
+result1 = adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c("z1",
+    "z3"), stratified_cox = "No", reference_group = NULL)
+```
+
+``` r
+adjKM_plot(result1, data = bmt)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+### Bootstrap results for Cox model
+
+``` r
+result1_1 = boot_ci_adj_km(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
+    status = "d3", group = "arm", covlist = c("z1", "z3"), stratified_cox = "No",
+    reference_group = NULL)
+```
+
+``` r
+adjKM_CI_plot(result1_1, bmt)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 ## Adjusted CIF Examples
 
 ### Example data
 
 ``` r
-library(KMsurv)
-#> Warning: package 'KMsurv' was built under R version 4.1.1
 data(bmt)
 bmt$arm <- bmt$group
 bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
@@ -76,7 +117,7 @@ head(table_res1)
 adjCIF_plot(result1, data = bmt)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 ### Bootstrap results for FG model with event = relapse
 
@@ -92,10 +133,4 @@ result1_boot = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bm
 adjCIF_CI_plot(result1_boot, bmt)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />

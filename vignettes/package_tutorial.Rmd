@@ -1,0 +1,468 @@
+---
+title: "package_tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{package_tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup,warning=FALSE,message=FALSE}
+library(AdjKM.CIF)
+library(tidyverse)
+library(DT)
+library(data.table)
+library(KMsurv)
+```
+
+# Covariate-Adjusted KM curves and probability
+
+## Example data
+
+```{r}
+data(bmt)
+bmt$arm <- bmt$group
+bmt$arm = factor(as.character(bmt$arm),levels=c("2","1","3"))
+#bmt$z10 = as.character(bmt$z10)
+bmt$z3 = as.character(bmt$z3)
+bmt$t2 = bmt$t2*12/365.25
+```
+
+## Adjusted KM
+
+### Coxph model
+
+```{r}
+result1 = adjusted_KM (data = bmt,time = "t2", status = "d3",group = "arm",
+                       covlist = c("z1","z3"),stratified_cox = "No", reference_group = NULL)
+table_res1 = spread(result1, class, prob)
+head(table_res1)
+```
+
+
+```{r}
+adjKM_plot(result1,data=bmt)
+```
+
+> Alternative: use ggplot to finalize figure
+
+Users can also use ggplot to customize figures as needed (e.g.change x ticks to every 6 months, change lab names)
+
+```{r}
+ggplot(result1,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+```
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res1,"cox_KM_res.csv")
+```
+
+### Stratified Cox model:  Gail & Byar's approach
+
+```{r}
+result2 = adjusted_KM (data = bmt,time = "t2", status = "d3",group = "arm",
+                       covlist = c("z1","z3"),stratified_cox = "Yes", reference_group = "G&B")
+
+table_res2 = spread(result2, class, prob)
+head(table_res2)
+```
+
+```{r}
+adjKM_plot(result2,data=bmt)
+```
+
+> Alternative: use ggplot to finalize figure
+
+
+```{r}
+ggplot(result2,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+
+```
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res2,"GB_KM_res.csv")
+```
+
+### Stratified Cox model: Storer's approach
+
+```{r}
+result3 = adjusted_KM (data = bmt,time = "t2", status = "d3",group = "arm", 
+                       covlist = c("z1","z3"),stratified_cox = "Yes", reference_group = "arm:2")
+
+table_res3 = spread(result3, class, prob)
+head(table_res3)
+```
+
+```{r}
+adjKM_plot(result3,data=bmt)
+```
+
+> Alternative: use ggplot to finalize figure
+
+
+```{r}
+ggplot(result3,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+
+```
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res3,"storer_KM_res.csv")
+```
+
+## Bootstrap CI
+
+### Cox PH model
+
+```{r}
+result1_1 = boot_ci_adj_km(boot_n=100,ci_cut=c(0.025,0.975),data = bmt, time = "t2", status = "d3",group = "arm",
+                         covlist = c("z1","z3"), stratified_cox = "No", reference_group = NULL)
+```
+
+> Figure
+
+```{r}
+adjKM_CI_plot(result1_1,bmt)
+```
+
+```{r}
+result1 = do.call(rbind,result1_1)
+
+ggplot(data.frame(result1),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+```
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_km = do.call(rbind,result1_1)
+write.csv(res_km,"boots_km_cox.csv")
+```
+
+### Stratified Cox: G&B for event = relapse {.tabset}
+
+```{r,include=TRUE}
+result1_2 =  boot_ci_adj_km(boot_n=100,ci_cut=c(0.025,0.975),data = bmt, time = "t2", status = "d3",group = "arm",
+                         covlist = c("z1","z3"), stratified_cox = "Yes", reference_group = "G&B")
+
+```
+    
+```{r}
+adjKM_CI_plot(result1_2,bmt)
+```
+
+```{r}
+result2 = do.call(rbind,result1_2)
+
+ggplot(data.frame(result2),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+    
+```
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_km = do.call(rbind,result1_2)
+write.csv(res_km,"boots_km_cox.csv")
+```
+
+### Stratified Cox: Storer for event = relapse {.tabset}
+
+```{r,include=TRUE}
+result1_3 =  boot_ci_adj_km(boot_n=100,ci_cut=c(0.025,0.975),data = bmt, time = "t2", status = "d3",group = "arm",
+                         covlist = c("z1","z3"), stratified_cox = "Yes", reference_group = "arm:2")
+
+```
+
+> Figure
+
+
+```{r}
+adjKM_CI_plot(result1_3,bmt)
+```
+
+```{r}
+result3 = do.call(rbind,result1_3)
+
+ggplot(data.frame(result3),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+    
+```
+
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_km = do.call(rbind,result1_3)
+write.csv(res_km,"boots_km_cox.csv")
+```
+
+# Covariate-Adjusted CIF curves and probability
+
+## Example data
+
+```{r}
+data(bmt)
+bmt$arm <- bmt$group
+bmt$arm = factor(as.character(bmt$arm),levels=c("2","1","3"))
+bmt$z3 = as.character(bmt$z3)
+
+bmt$CenCI <- 0
+for(ii in 1:137) {
+  if (bmt$d3[ii] == 0){
+    bmt$CenCI[ii] <- 0
+    }else {
+    if (bmt$d2[ii] == 1){
+      bmt$CenCI[ii] <- 1
+  }else{
+      bmt$CenCI[ii] <- 2}}
+}
+bmt$t2 = bmt$t2*12/365.25
+```
+
+## Adjusted CIF
+
+## FG model for event = relapse
+
+```{r}
+result1 =adjusted_CIF(data = bmt,time = "t2", status = "CenCI",group = "arm", covlist = c("z1","z3"),event_code=1,stratified = "No", reference_group = NULL)
+table_res1 = spread(result1, class, prob)
+head(table_res1)
+```
+
+```{r}
+adjCIF_plot(result1,data=bmt)
+```
+
+> Use ggplot to finalize figure
+
+Users can also use ggplot to customize figures as needed (e.g.change x ticks to every 6 months, change lab names)
+
+```{r}
+ggplot(result1,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+
+```
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res1,"cox_CIF_res.csv")
+```
+
+### Stratified FG: G&B approach for event = relapse
+
+```{r}
+result2 = adjusted_CIF(data = bmt,time = "t2", status = "CenCI",group = "arm",covlist = c("z1","z3"),event_code=1,stratified = "Yes", reference_group = "G&B")
+table_res2 = spread(result2, class, prob)
+head(table_res2)
+```
+
+```{r}
+adjCIF_plot(result2,data=bmt)
+```
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res2,"GB_CIF_res.csv")
+```
+
+> Use ggplot to finalize figure
+
+```{r}
+ggplot(result2,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+```
+
+### Stratified FG: Storer's approach for event = relapse
+
+```{r}
+result3 = adjusted_CIF (data = bmt,time = "t2", status = "CenCI",group = "arm",covlist = c("z1","z3"),event_code=1,stratified = "Yes", reference_group = "arm:2")
+
+table_res3 = spread(result3, class, prob)
+datatable(table_res3)%>%
+  formatRound(columns=c("1","2","3"),digits = 3)
+```
+
+```{r}
+adjCIF_plot(result3,data=bmt)
+```
+
+
+> Alternative: use ggplot to finalize figure
+
+
+```{r}
+ggplot(result3,aes(x=time,y = prob, group =class))+
+      geom_step(aes(linetype=class,color = class),size=1.5)+
+      theme_classic()+
+      ylim(c(0,1))+
+      scale_x_continuous(name="Time (Months)",breaks = seq(0,84,6))+
+      ylab("Probability")
+```
+
+
+> save results
+
+```{r,eval = FALSE}
+write.csv(table_res3,"storer_CIF_res.csv")
+```
+
+## Bootstrap CI
+
+### FG model for event = relapse
+
+```{r,include=TRUE}
+result1_1 = boot_ci_adj_cif(boot_n=100,ci_cut=c(0.025,0.975),data = bmt,time = "t2", status = "CenCI",group = "arm",covlist = c("z1","z3"),event_code=1,"No",NULL)
+```
+
+> Figure
+
+
+```{r}
+adjCIF_CI_plot(result1_1,bmt)
+```
+
+```{r}
+result1 = do.call(rbind,result1_1)
+
+ggplot(data.frame(result1),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+    
+```
+
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_boot = do.call(rbind,result1_1)
+write.csv(res_boot,"boots_cif_cox.csv")
+```
+
+### Stratified FG: G&B for event = relapse 
+
+```{r,include=TRUE}
+result1_2 = boot_ci_adj_cif(boot_n=100,ci_cut=c(0.025,0.975),data = bmt,time = "t2", status = "CenCI",group = "arm",covlist = c("z1","z3"),event_code=1,"Yes","G&B")
+
+```
+
+> Figure
+
+```{r}
+adjCIF_CI_plot(result1_2,bmt)
+```
+
+```{r}
+result2 = do.call(rbind,result1_2)
+
+ggplot(data.frame(result2),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+    
+```
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_boot = do.call(rbind,result1_2)
+write.csv(res_boot,"boots_cif_cox.csv")
+```
+
+### Stratified FG: Storer for event = relapse
+
+```{r,include=TRUE}
+# unstratified Fine-Gray regression model 
+result1_3 = boot_ci_adj_cif(boot_n=100,ci_cut=c(0.025,0.975),data = bmt,time = "t2", status = "CenCI",group = "arm",covlist = c("z1","z3"),event_code=1,"Yes","arm:2")
+```
+
+> Figure
+
+```{r}
+adjCIF_CI_plot(result1_3,bmt)
+```
+
+
+```{r}
+result3 = do.call(rbind,result1_3)
+
+ggplot(data.frame(result3),aes(x=time,y = t_sub_mean, group =class ))+
+  geom_step(aes(linetype=class,color = class),size=1.2)+
+  geom_ribbon(aes(ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+  ylim(c(0,1))+
+  theme_classic()+
+  scale_x_continuous(name = "Time (Months)",
+    breaks = seq(0, 84, 6)) +
+    ylab("Probability")
+    
+```
+
+> save bootstrap results
+
+```{r,eval=FALSE}
+res_boot = do.call(rbind,result1_3)
+write.csv(res_boot,"boots_cif_cox.csv")
+```

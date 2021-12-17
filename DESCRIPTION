@@ -16,6 +16,9 @@ Imports:
     riskRegression,
     prodlim,
     crrSC
+    data.table
 Depends:
     R (>= 3.1.0)
 RoxygenNote: 7.1.2
+Suggests: 
+    knitr

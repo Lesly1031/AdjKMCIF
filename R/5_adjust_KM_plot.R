@@ -61,7 +61,7 @@ adjKM_plot = function(res,data){
 #' adjKM_CI_plot(result1_1, bmt)
 
 adjKM_CI_plot = function(res,data){
-  boot_ci = rbindlist(res)
+  boot_ci = data.table::rbindlist(res)
   names(boot_ci)[2]="prob"
   p =
     ggplot2::ggplot(data.frame(boot_ci))+
