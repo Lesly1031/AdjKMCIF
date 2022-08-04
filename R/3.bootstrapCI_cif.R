@@ -1,7 +1,6 @@
 #' Bootstrap CI for adjusted CIF
 #'
-#' Use input data, time, status,grouping variables, adjusted covariates,
-#' events of interests, whether to use stratified model, and defining reference group as inputs
+#' Computes the covariate-adjusted CIF functions along with confidence intervals by the bootstrap percentile method.
 #'
 #' @param boot_n bootstrap sample size
 #' @param ci_cut default c(0.025, 0.975) bootstrap 95\% CI

@@ -1,11 +1,11 @@
-#' Generate adjusted KM plot without CI
+#' Covariate-adjusted KM plot
 #'
-#' Use results from adjusted_KM() and input dataset to generate adjusted survival plot (users can also produce a figure by using ggplot2)
+#' Use the results from adjusted_KM() and input dataset to generate adjusted survival plot. The figure is compatible with the results from adjusted_KM()
 #'
 #' @param res results from adjusted_KM()
 #' @param data the input dataset
 #'
-#' @return Adjusted KM plot will be shown after running this function
+#' @return Adjusted KM plot will be shown
 #' @export
 #'
 #' @examples
@@ -36,9 +36,9 @@ adjKM_plot = function(res,data){
 }
 
 
-#' Generate adjusted KM plot with bootstrap CI
+#' Generate adjusted KM plot with including bootstrap CI
 #'
-#' Use results from boot_ci_adj_km() and input dataset to generate adjusted KM plot with bootstrap CI (users can also produce a figure by using ggplot2)
+#' Use the results from boot_ci_adj_km() and input dataset to generate adjusted KM plot with bootstrap CI
 #'
 #' @param res results from boot_ci_adj_km()
 #' @param data the input dataset

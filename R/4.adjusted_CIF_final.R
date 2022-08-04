@@ -1,7 +1,7 @@
-#' Calculate the adjusted CIF probability
+#' Covariate-adjusted CIF probability
 #'
-#' Use input data, time, status, grouping variables, adjusted covariates,
-#' events of interests, whether to use stratified model, and reference group as inputs
+#' The function computes the covariate-adjusted CIF based on Fine-Gray or stratified Fine-Gray model. Three approaches are
+#' implemented. See the detail in "adjusted_KM()" function.
 #'
 #' @param data the input dataset
 #' @param time column name of time variable
@@ -13,6 +13,7 @@
 #' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
 #'
 #' @return Output is a dataframe with adjusted CIF probabilities. If the PH assumption is invalid or if practitioners need a method by which the event time points of the adjusted function match those of the unadjusted function, the stratified model should be used (Gail and Byar and Storer et. al), otherwise, unstratified FG model can be used.
+#' See more details in "adjusted_KM()" function.
 #' @export
 #'
 #' @examples

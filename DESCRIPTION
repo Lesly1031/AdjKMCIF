@@ -1,6 +1,6 @@
 Package: AdjKM.CIF
 Type: Package
-Title: Create the covariate-adjusted Kaplan-Meier and cumulative incidence functions 
+Title: Create the covariate-adjusted Kaplan-Meier and cumulative incidence functions based on Cox and Fine-Gray regression model.
 Version: 0.1.0
 Author: Biwei Cao, Jongphil Kim
 Maintainer: Biwei Cao <biwei.cao@moffitt.org>

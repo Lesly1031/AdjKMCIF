@@ -1,6 +1,6 @@
-#' Generate adjusted CIF plot without CI
+#' Covariate-adjusted CIF plot
 #'
-#' Use results from adjusted_CIF() and input dataset to generate adjusted CIF plot (users can also produce a figure by using ggplot2)
+#' Use results from adjusted_CIF() and input dataset to generate adjusted CIF plot. The figure is compatible with the results from adjusted_CIF().
 #'
 #' @param res results from adjusted_CIF()
 #' @param data the input dataset
@@ -50,7 +50,7 @@ adjCIF_plot = function(res,data){
 
 #' Generate adjusted CIF plot with bootstrap CI
 #'
-#' Use results from boot_ci_adj_cif() and input dataset to generate adjusted CIF plot with bootstrap CI (users can also produce a figure by using ggplot2)
+#' Use results from boot_ci_adj_cif() and input dataset to generate adjusted CIF plot with bootstrap CI
 #'
 #' @param res results from boot_ci_adj_cif()
 #' @param data the input dataset

@@ -1,17 +1,23 @@
-#' Calculate the adjusted survival probability
+#' Calculate the covariate-adjusted survival probability based on Cox/stratified Cox model
 #'
-#' Use input data, time, status, grouping variables, adjusted covariates,
-#' whether to use stratified model, and reference group as inputs
+#' The function computes the covariate-adjusted KM functions based on Cox or stratified Cox model. More details is presented in
+#' 'AdjKM.CIF: An R package for estimating the covariate-adjusted Kaplan-Meier and cumulative incidence functions'. Three approaches are
+#' implemented. See the value section.
+#'
 #'
 #' @param data the input dataset
 #' @param time column name of time variable
 #' @param status column name of event status
 #' @param group grouping variable
-#' @param covlist list of covariates that should be included in the model
+#' @param covlist list of covariates that should be included in the Cox model
 #' @param stratified_cox "Yes" refers to use stratified model, "No" refers to use Coxph
 #' @param reference_group NULL- unstratified cox when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
 #'
-#' @return Output is a dataframe with adjusted survival probabilities. If the PH assumption is invalid or if practitioners need a method by which the event time points of the adjusted function match those of the unadjusted function, the stratified model should be used (Gail and Byar and Storer et. al), otherwise, unstratified FG model can be used.
+#' @return Output is a dataframe with adjusted survival probabilities.
+#' The stratified Cox regression model can be applied if the argument "stratified_cox="Yes"" is specified, where the group variable serves as the stratification variable in the model. The reference group per the Gail and Byar method includes all subjects in each group by specifying "reference_group = "G&B"", while the Storer method selects a specific group as the reference group by "reference_group = "variable_name:level""
+#' If "stratified_cox = "No"", and "reference_group = NULL", then the unstratified Cox is used to estimate the adjusted survival probability.
+#' Unstratified Cox model is appropriate if the PH assumption is valid. As the common baseline survival function is used, there's no difference in "event time points" between groups, and the number of events does not match the actual number of events in each group.
+#' If need a method by which the event time points of the adjusted function match those of the unadjusted function, the stratified Cox can be selected as an alternative.
 #' @export
 #'
 #' @examples
