@@ -10,6 +10,7 @@
 #'
 #' @examples
 #' # Data preparation
+#' install.packages("KMsurv")
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -29,7 +30,7 @@ adjKM_plot = function(res,data){
     res_long = res
 
     p = ggplot2::ggplot(res_long)+
-      ggplot2::geom_step(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class),size=1.5)+
+      ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.5)+
       ggplot2::theme_classic()+
       ggplot2:: ylim(c(0,1))
     return(p)
@@ -47,6 +48,7 @@ adjKM_plot = function(res,data){
 #' @export
 #'
 #' @examples
+#' install.packages("KMsurv")
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -65,8 +67,8 @@ adjKM_CI_plot = function(res,data){
   names(boot_ci)[2]="prob"
   p =
     ggplot2::ggplot(data.frame(boot_ci))+
-    ggplot2::geom_step(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class),size=1.2)+
-    ggplot2::geom_ribbon(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class,ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+    ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.2)+
+    ggplot2::geom_ribbon(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class",ymin="lower",ymax="upper",fill="class"),alpha=0.3)+
     ggplot2::ylim(c(0,1))+
     theme_classic()
   return(p)

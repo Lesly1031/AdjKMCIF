@@ -13,28 +13,29 @@ knitr::opts_chunk$set(
 )
 ```
 
-# AdjKM.CIF
+# AdjKMCIF
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/Lesly1031/AdjKM_CIF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Lesly1031/AdjKM_CIF/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of AdjKM.CIF is to create the covariate-adjusted Kaplan-Meier and cumulative incidence functions.
+The goal of AdjKMCIF is to create the covariate-adjusted Kaplan-Meier and cumulative incidence functions.
 
-You could check the more specific introduction of the package at <https://lesly1031.github.io/AdjKM.CIF/>
+You could check the more specific introduction of the package at <https://lesly1031.github.io/AdjKMCIF/>
 
 ## Installation
 
-You can install the development version of AdjKM.CIF from [GitHub](https://github.com/) with:
+You can install the development version of AdjKMCIF from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Lesly1031/AdjKM.CIF",dependencies = TRUE)
+devtools::install_github("Lesly1031/AdjKMCIF",dependencies = TRUE)
 ```
 
 ## Adjusted KM examples
 
 ```{r,warning=FALSE,message=FALSE}
-library(AdjKM.CIF)
+library(AdjKMCIF)
 library(tidyverse)
 library(DT)
 library(data.table)
@@ -83,9 +84,7 @@ data(bmt)
 bmt$arm <- bmt$group
 bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
 bmt$z3 = as.character(bmt$z3)
-
 bmt$CenCI <- 0
-
 for (ii in 1:137) {
     if (bmt$d3[ii] == 0) {
         bmt$CenCI[ii] = 0
@@ -129,6 +128,3 @@ result1_boot = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bm
 ```{r}
 adjCIF_CI_plot(result1_boot, bmt)
 ```
-
-
-

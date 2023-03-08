@@ -1,11 +1,11 @@
-Package: AdjKM.CIF
+Package: AdjKMCIF
 Type: Package
-Title: Create the covariate-adjusted Kaplan-Meier and cumulative incidence functions based on Cox and Fine-Gray regression model.
-Version: 0.1.0
+Title: A package for generating covariate-adjusted Kaplan-Meier and cumulative incidence functions 
+Version: 1.0.0
 Author: Biwei Cao, Jongphil Kim
 Maintainer: Biwei Cao <biwei.cao@moffitt.org>
-Description: The R package to estimate the covariate-adjusted Kaplan-Meier and cumulative incidence functions.
-License: GPL-3
+Description: Our R package allows practitioners to estimate the covariate-adjusted KM functions and CIFs based upon the Cox and the Fine-Gray regression model, respectively. The Gail and Byar method and the Storer method are offered in the package when the stratified model is used. Additionally, the bootstrap method is available for estimating pointwise confidence intervals.
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -21,4 +21,8 @@ Depends:
     R (>= 3.1.0)
 RoxygenNote: 7.1.2
 Suggests: 
-    knitr
+    knitr,
+    KMsurv,
+    DT
+VignetteBuilder: knitr
+Config/testthat/edition: 3

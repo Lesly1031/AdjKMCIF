@@ -1,23 +1,22 @@
-#' Covariate-adjusted CIF probability
+#' Covariate-Adjusted cumulative incidence functions
 #'
-#' The function computes the covariate-adjusted CIF based on Fine-Gray or stratified Fine-Gray model. Three approaches are
-#' implemented. See the detail in "adjusted_KM()" function.
+#' The function computes the covariate-adjusted CIF based on Fine-Gray or stratified Fine-Gray model. Three approaches are implemented. See the detail in "adjusted_KM()" function.
 #'
-#' @param data the input dataset
+#' @param data the input data set
 #' @param time column name of time variable
 #' @param status column name of event status
 #' @param group grouping variable
 #' @param covlist list of covariates that should be included in the model
-#' @param event_code event of interests
+#' @param event_code event of interests that indicates the failure type of interest
 #' @param stratified "Yes" refers to use stratified model, "No" refers to use Fine and Gray regression
-#' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
+#' @param reference_group “NULL” - No reference group required for the Cox PH model;“G&B” - the Gail and Byar method; “group:level” - the reference group for the Storer method (e.g., “arm:2” in the BMT data)
 #'
-#' @return Output is a dataframe with adjusted CIF probabilities. If the PH assumption is invalid or if practitioners need a method by which the event time points of the adjusted function match those of the unadjusted function, the stratified model should be used (Gail and Byar and Storer et. al), otherwise, unstratified FG model can be used.
-#' See more details in "adjusted_KM()" function.
+#' @return The function generates a data frame that contains the adjusted CIF probabilities. In cases where the proportional hazards (PH) assumption is not valid, or if practitioners require the event time points of the adjusted function to match those of the unadjusted function, the stratified model (using Gail and Byar or Storer et al. methods) should be used. Otherwise, the unstratified Fine-Gray (FG) model is sufficient. Additional information about this can be found in the "adjusted_KM()" function.
 #' @export
 #'
 #' @examples
 #'
+#' install.packages("KMsurv")
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -66,7 +65,7 @@ adjusted_CIF = function(data,time,status,group,covlist,event_code =1,stratified=
   grouplist = group
   numgroup = length(levels(factor(data[[group]])))
 
-  res_long = tidyr::gather(res,class,prob,names(table(data[,group]))[1]:names(table(data[,group]))[numgroup])
+  res_long = tidyr::gather(res,"class","prob",names(table(data[,group]))[1]:names(table(data[,group]))[numgroup])
   return(res_long)
 }
 

@@ -10,7 +10,7 @@
 #'
 #' @examples
 #'
-#'
+#' install.packages("KMsurv")
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -42,7 +42,7 @@ adjCIF_plot = function(res,data){
   res_long = res
 
   p = ggplot2::ggplot(res_long)+
-    ggplot2::geom_step(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class),size=1.5)+
+    ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.5)+
     ggplot2::theme_classic()+
     ggplot2:: ylim(c(0,1))
   return(p)
@@ -60,6 +60,7 @@ adjCIF_plot = function(res,data){
 #'
 #' @examples
 #'
+#' install.packages("KMsurv")
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
@@ -82,10 +83,10 @@ adjCIF_plot = function(res,data){
 #' bmt$t2 = bmt$t2 * 12/365.25
 #'
 #' # Adjusted CIF plot with bootstrap CI
-#' result1_1 = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
+#' result1_1  = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
 #' status = "CenCI", group = "arm", covlist = c("z1", "z3"), event_code = 1, "No",
 #'                             NULL)
-#' adjCIF_CI_plot(result, data = bmt)
+#' adjCIF_CI_plot(result1_1, data = bmt)
 #'
 #'
 adjCIF_CI_plot = function(res,data){
@@ -93,8 +94,8 @@ adjCIF_CI_plot = function(res,data){
   names(boot_ci)[2]="prob"
   p =
     ggplot2::ggplot(data.frame(boot_ci))+
-    ggplot2::geom_step(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class),size=1.2)+
-    ggplot2::geom_ribbon(ggplot2::aes(x=time,y = prob, group =class,linetype=class,color= class,ymin=lower,ymax=upper,fill=class),alpha=0.3)+
+    ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.2)+
+    ggplot2::geom_ribbon(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class",ymin="lower",ymax="upper",fill="class"),alpha=0.3)+
     ggplot2::ylim(c(0,1))+
     theme_classic()
   return(p)

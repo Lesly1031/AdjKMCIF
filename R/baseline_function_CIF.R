@@ -1,19 +1,18 @@
-#' use R code to calculate baseline CIF
+#' Calculate baseline cumulative incidence
 #'
-#' Internal function for adjusted CIF.  Use input data, time, status,grouping variables, adjusted covariates,
-#' events of interests, the known beta as inputs
+#' Internal function to compute baseline cumulative incidence
 #'
 #' @noRd
 #'
-#' @param data input data
-#' @param time time
-#' @param status status
+#' @param data input data set
+#' @param time column names of time variable
+#' @param status event status, vector with a unique code for each failure type and 0 for censored observations
 #' @param group grouping variable
-#' @param covlist adjusted covariates
-#' @param event_code event of interests
-#' @param beta beta from FG or stratified model
+#' @param covlist list of covariates that would like to adjust for
+#' @param event_code event of interests that indicates the failure type of interest
+#' @param beta Estimated beta from Fine Gray model or stratified Fine Gray model
 #'
-#' @return a dataframe
+#' @return a data frame with time and baseline CIF
 #'
 .baseline_hazard_cif = function(data,time,status,group,covlist,event_code,beta){
 

@@ -15,11 +15,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup,warning=FALSE,message=FALSE}
-library(AdjKM.CIF)
-library(tidyverse)
+library(AdjKMCIF)
+library(tidyr)
 library(DT)
 library(data.table)
 library(KMsurv)
+library(ggplot2)
 ```
 
 # Covariate-Adjusted KM curves and probability

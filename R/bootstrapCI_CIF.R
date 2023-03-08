@@ -11,9 +11,9 @@
 #' @param covlist list of covariates that should be included in the model
 #' @param event_code event of interests
 #' @param stratified "Yes" refers to use stratified model, "No" refers to use Fine and Gray regression
-#' @param reference_group NULL- unstratified FG when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
+#' @param reference_group "NULL" - No reference group required for the Cox PH model;"G&B" - the Gail and Byar method; "group:level" - the reference group for the Storer method (e.g., "arm:2" in the BMT data)
 #'
-#' @return Output is a dataframe with average number of adjusted CIF probabilities, as well as 2.5\% and 97.5\% percentiles.
+#' @return The result obtained is a data frame containing the mean adjusted CIF probabilities along with their corresponding 2.5th and 97.5th percentiles by bootstrap method. If the proportional hazards (PH) assumption is not met, or if practitioners need to align the event time points between the adjusted and unadjusted functions, the recommended approach is to use a stratified model. This can be done using the Gail and Byar or Storer et al. methods. However, if neither of these situations apply, then using the unstratified Fine-Gray (FG) model will suffice. For more details on this, please refer to the "adjusted_CIF()"
 #' @export
 #'
 #' @examples

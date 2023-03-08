@@ -10,7 +10,7 @@
 #' @param group grouping variable
 #' @param covlist list of covariates that should be included in the model
 #' @param stratified_cox "Yes" refers to use stratified model, "No" refers to use coxph regression
-#' @param reference_group NULL- unstratified coxph when stratified = No; "G&B"- G&B when stratified = Yes; Otherwise, Storer's approach will be performed when using a self-defined reference
+#' @param reference_group "NULL" - No reference group required for the Cox PH model;"G&B" - the Gail and Byar method; "group:level" - the reference group for the Storer method (e.g., "arm:2" in the BMT data)
 #'
 #' @return Output is a dataframe with average number of adjusted survival probabilities, as well as 2.5\% and 97.5\% percentiles.
 #' @export

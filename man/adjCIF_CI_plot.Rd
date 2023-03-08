@@ -41,7 +41,7 @@ for (ii in 1:137) {
 bmt$t2 = bmt$t2 * 12/365.25
 
 # Adjusted CIF plot with bootstrap CI
-result1_1 = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
+result = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
 status = "CenCI", group = "arm", covlist = c("z1", "z3"), event_code = 1, "No",
                             NULL)
 adjCIF_CI_plot(result, data = bmt)
