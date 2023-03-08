@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 
 The goal of AdjKMCIF is to create the covariate-adjusted Kaplan-Meier and cumulative incidence functions.
 
-You could check the more specific introduction of the package at <https://lesly1031.github.io/AdjKMCIF/>
+More specific introduction of the package can be found at <https://lesly1031.github.io/AdjKMCIF/>
+
 
 ## Installation
 

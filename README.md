@@ -6,12 +6,14 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/Lesly1031/AdjKM_CIF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Lesly1031/AdjKM_CIF/actions/workflows/R-CMD-check.yaml)
+[![License: GPL
+v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
 
 The goal of AdjKMCIF is to create the covariate-adjusted Kaplan-Meier
 and cumulative incidence functions.
 
-You could check the more specific introduction of the package at
+More specific introduction of the package can be found at
 <https://lesly1031.github.io/AdjKMCIF/>
 
 ## Installation
