@@ -16,11 +16,21 @@
 #'
 .baseline_hazard_cif = function(data,time,status,group,covlist,event_code,beta){
 
+  # EvTime0 = sort(data[[time]][data[[status]]==event_code])
+  # EvTimes = unique(EvTime0)
+  # 3/1/2025
   EvTime0 = sort(data[[time]][data[[status]]==event_code])
+  EvTime0 = EvTime0[EvTime0 > 0]  # ←
   EvTimes = unique(EvTime0)
+  ##
   nn = nrow(data);mm = ncol(data)
   inputvars = data.frame(data[,c(group,covlist)])
   inputvars_temp = inputvars # save for names
+  for(i in 1:ncol(inputvars_temp)){
+    if(class(inputvars_temp[,i]) == "character"){
+      inputvars_temp[,i] = factor(inputvars_temp[,i])  # ← 转成factor才有levels
+    }
+  }
   ################ Need to confirm with Dr. Kim???? ##########################
   suppressWarnings(
     for(i in 1:ncol(inputvars)){
@@ -164,6 +174,3 @@
   CIF0 = cbind(CumHaz0[,1], 1-exp(-CumHaz0[,2]%*%exp((Z0)%*%beta))) # baseline CIF = 1 - exp(-H0)
   return(CumHaz0)
 }
-
-
-

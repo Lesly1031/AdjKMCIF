@@ -10,12 +10,12 @@
 #'
 #' @examples
 #'
-#' install.packages("KMsurv")
+#' \dontrun{
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
-#' bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
-#' bmt$z3 = as.character(bmt$z3)
+#' bmt$arm <- factor(as.character(bmt$arm), levels = c("2", "1", "3"))
+#' bmt$z3 <- as.character(bmt$z3)
 #'
 #' bmt$CenCI <- 0
 #' for (ii in 1:137) {
@@ -30,21 +30,23 @@
 #'   }
 #' }
 #'
-#' bmt$t2 = bmt$t2 * 12/365.25
+#' bmt$t2 <- bmt$t2 * 12 / 365.25
 #'
-#'# Adjusted CIF plot without CI
-#' result = adjusted_CIF(data = bmt, time = "t2", status = "CenCI", group = "arm",
-#' covlist = c("z1", "z3"), event_code = 1, stratified = "Yes", reference_group = "arm:2")
+#' # Adjusted CIF plot without CI
+#' result <- adjusted_CIF(
+#'   data = bmt, time = "t2", status = "CenCI", group = "arm",
+#'   covlist = c("z1", "z3"), event_code = 1, stratified = "Yes", reference_group = "arm:2"
+#' )
 #' adjCIF_plot(result, data = bmt)
+#' }
 #'
+adjCIF_plot <- function(res, data) {
+  res_long <- res
 
-adjCIF_plot = function(res,data){
-  res_long = res
-
-  p = ggplot2::ggplot(res_long)+
-    ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.5)+
-    ggplot2::theme_classic()+
-    ggplot2:: ylim(c(0,1))
+  p <- ggplot2::ggplot(res_long) +
+    ggplot2::geom_step(ggplot2::aes_string(x = "time", y = "prob", group = "class", linetype = "class", color = "class"), size = 1.5) +
+    ggplot2::theme_classic() +
+    ggplot2::ylim(c(0, 1))
   return(p)
 }
 
@@ -60,12 +62,12 @@ adjCIF_plot = function(res,data){
 #'
 #' @examples
 #'
-#' install.packages("KMsurv")
+#' \dontrun{
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
-#' bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
-#' bmt$z3 = as.character(bmt$z3)
+#' bmt$arm <- factor(as.character(bmt$arm), levels = c("2", "1", "3"))
+#' bmt$z3 <- as.character(bmt$z3)
 #'
 #' bmt$CenCI <- 0
 #' for (ii in 1:137) {
@@ -80,25 +82,25 @@ adjCIF_plot = function(res,data){
 #'   }
 #' }
 #'
-#' bmt$t2 = bmt$t2 * 12/365.25
+#' bmt$t2 <- bmt$t2 * 12 / 365.25
 #'
 #' # Adjusted CIF plot with bootstrap CI
-#' result1_1  = boot_ci_adj_cif(boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
-#' status = "CenCI", group = "arm", covlist = c("z1", "z3"), event_code = 1, "No",
-#'                             NULL)
+#' result1_1 <- boot_ci_adj_cif(
+#'   boot_n = 100, ci_cut = c(0.025, 0.975), data = bmt, time = "t2",
+#'   status = "CenCI", group = "arm", covlist = c("z1", "z3"), event_code = 1, "No",
+#'   NULL
+#' )
 #' adjCIF_CI_plot(result1_1, data = bmt)
+#'}
 #'
-#'
-adjCIF_CI_plot = function(res,data){
-  boot_ci = rbindlist(res)
-  names(boot_ci)[2]="prob"
-  p =
-    ggplot2::ggplot(data.frame(boot_ci))+
-    ggplot2::geom_step(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class"),size=1.2)+
-    ggplot2::geom_ribbon(ggplot2::aes_string(x="time",y = "prob", group ="class",linetype="class",color= "class",ymin="lower",ymax="upper",fill="class"),alpha=0.3)+
-    ggplot2::ylim(c(0,1))+
+adjCIF_CI_plot <- function(res, data) {
+  boot_ci <- rbindlist(res)
+  names(boot_ci)[2] <- "prob"
+  p <-
+    ggplot2::ggplot(data.frame(boot_ci)) +
+    ggplot2::geom_step(ggplot2::aes_string(x = "time", y = "prob", group = "class", linetype = "class", color = "class"), size = 1.2) +
+    ggplot2::geom_ribbon(ggplot2::aes_string(x = "time", y = "prob", group = "class", linetype = "class", color = "class", ymin = "lower", ymax = "upper", fill = "class"), alpha = 0.3) +
+    ggplot2::ylim(c(0, 1)) +
     theme_classic()
   return(p)
 }
-
-

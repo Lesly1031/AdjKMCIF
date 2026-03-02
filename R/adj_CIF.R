@@ -18,6 +18,8 @@
 #'
 .adj_cif = function(data,time,status,group,covlist,event_code,stratified="Yes",reference_group=NULL){
 
+  data = data.frame(data, check.names=F)
+  data = data.frame(na.omit(data[,c(time,status,group,covlist)]), check.names=F)  #3/1/2026
 
   grouplist = group
   covlist = covlist
@@ -33,7 +35,7 @@
   indata$time = as.numeric(as.character(indata$time))
   indata$status = as.numeric(as.character(indata$status))
 
-################### Get beta estimate #####################
+  ################### Get beta estimate #####################
   inputvars  <- paste0("z",1:numcov)
   indata_cox1 = indata
   if(stratified=="No"){
@@ -64,32 +66,39 @@
   }else if (stratified=="Yes"){
     if(!is.null(reference_group)){
       suppressWarnings(
-      for(i in 3:ncol(indata_cox1)){
-        if(class(indata_cox1[,i])=="numeric"|class(indata_cox1[,i])=="integer"){ # if numeric, keep
-          indata_cox1[,i] = indata_cox1[,i]
-        }else if(class(indata_cox1[,i])=="factor"|class(indata_cox1[,i])=="character"){ # if character/factor, change to factor
-          indata_cox1[,i] = as.factor(indata_cox1[,i])
-          if(is.na(sum(as.numeric(levels(as.factor(indata_cox1[,i])))))){ # if string factor change to numeric, and minus 1
-            indata_cox1[,i] = as.character(as.numeric(as.factor(indata_cox1[,i]))-1)
-          }else{
-            indata_cox1[,i] = as.character(as.numeric(as.factor(indata_cox1[,i])))
+        for(i in 3:ncol(indata_cox1)){
+          if(class(indata_cox1[,i])=="numeric"|class(indata_cox1[,i])=="integer"){ # if numeric, keep
+            indata_cox1[,i] = indata_cox1[,i]
+          }else if(class(indata_cox1[,i])=="factor"|class(indata_cox1[,i])=="character"){ # if character/factor, change to factor
+            indata_cox1[,i] = as.factor(indata_cox1[,i])
+            if(is.na(sum(as.numeric(levels(as.factor(indata_cox1[,i])))))){ # if string factor change to numeric, and minus 1
+              indata_cox1[,i] = as.character(as.numeric(as.factor(indata_cox1[,i]))-1)
+            }else{
+              indata_cox1[,i] = as.character(as.numeric(as.factor(indata_cox1[,i])))
 
+            }
           }
         }
-      }
       )
+      # update on 3/1/2026
       dtt = data.frame(na.omit(indata_cox1))
-      cov_list = dtt[,-c(1:3)]
-      fit = crrSC::crrs(ftime = dtt$time,fstatus = dtt$status,cov1 =cov_list,strata = dtt$strata ,failcode = event_code)
-      beta = fit$coef
+      inputvars_dtt = names(dtt)[-c(1:3)]
+      fit_formula = as.formula(paste("prodlim::Hist(time,status)~", paste(inputvars_dtt, collapse=" + ")))
+      fit = riskRegression::FGR(fit_formula,data=dtt,cause = event_code)
+      beta = fit$crrFit$coef
       beta = matrix(beta,ncol=1)
+     #############
+      # cov_list = dtt[,-c(1:3)]
+      # fit = crrSC::crrs(ftime = dtt$time,fstatus = dtt$status,cov1 =cov_list,strata = dtt$strata ,failcode = event_code)
+      # beta = fit$coef
+      # beta = matrix(beta,ncol=1)
 
     }else{
       stop("Please choose 'G&B', or self-define a reference group for stratified cox model")
     }
   }
 
-################ Baseline CIF ###############
+  ################ Baseline CIF ###############
   if(stratified=="No"){
     if(is.null(reference_group)){
       CIF0 = .baseline_hazard_cif(data,time,status,group,covlist,event_code=event_code,beta)
@@ -120,7 +129,7 @@
     }
   }
 
-############### Linear predictor ###################
+  ############### Linear predictor ###################
   if(stratified=="No"){
     if(is.null(reference_group)){
       indata_sort = indata[order(indata$time),]
@@ -183,21 +192,19 @@
   coxout$strata = factor(coxout$strata)
   strata_num = length(levels(coxout$strata))
 
- cif_probability = lapply(1:strata_num,function(x){
+  cif_probability = lapply(1:strata_num,function(x){
     .cif_prob(data=data,coxout=coxout,base_res=CIF0,event_code=event_code,strata_group = levels(coxout$strata)[[x]],stratified=stratified,reference_group = reference_group)
   })
- ######################################################################
- #----------------survival probability-------------------------
- ######################################################################
- cif_prob_cb = do.call(cbind,cif_probability)
- coxout_event = subset(coxout,coxout$status==event_code)
- unique_eventTime = data.frame(signif(unique(coxout_event$time),8));names(unique_eventTime)="time"
- res = data.frame(cbind(unique_eventTime[order(unique_eventTime$time,decreasing = F),],cif_prob_cb))
+  ######################################################################
+  #----------------survival probability-------------------------
+  ######################################################################
+  cif_prob_cb = do.call(cbind,cif_probability)
+  coxout_event = subset(coxout,coxout$status==event_code)
+  unique_eventTime = data.frame(signif(unique(coxout_event$time),8));names(unique_eventTime)="time"
+  res = data.frame(cbind(unique_eventTime[order(unique_eventTime$time,decreasing = F),],cif_prob_cb))
 
- colnames(res) = c("time",names(table(data[,grouplist])))
+  colnames(res) = c("time",names(table(data[,grouplist])))
 
- res
+  res
 
 }
-
-

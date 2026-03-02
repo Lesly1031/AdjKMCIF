@@ -22,46 +22,52 @@
 #'
 #' @examples
 #' # Data preparation
-#' install.packages("KMsurv")
+#' \dontrun{
 #' library(KMsurv)
 #' data(bmt)
 #' bmt$arm <- bmt$group
-#' bmt$arm = factor(as.character(bmt$arm), levels = c("2", "1", "3"))
-#' bmt$z3 = as.character(bmt$z3)
-#' bmt$t2 = bmt$t2 * 12/365.25
+#' bmt$arm <- factor(as.character(bmt$arm), levels = c("2", "1", "3"))
+#' bmt$z3 <- as.character(bmt$z3)
+#' bmt$t2 <- bmt$t2 * 12 / 365.25
 #'
 #' # Cox model
-#' result1 = adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c("z1",
-#' "z3"), stratified_cox = "No", reference_group = NULL)
+#' result1 <- adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c(
+#'   "z1",
+#'   "z3"
+#' ), stratified_cox = "No", reference_group = NULL)
 #'
 #' # Stratified cox: Gail&Byar's approach
-#' result2 = adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c("z1",
-#' "z3"), stratified_cox = "Yes", reference_group = "G&B")
+#' result2 <- adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c(
+#'   "z1",
+#'   "z3"
+#' ), stratified_cox = "Yes", reference_group = "G&B")
 #'
 #' # Stratified cox: Storer's approach
-#' result3 = adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c("z1",
-#' "z3"), stratified_cox = "Yes", reference_group = "arm:2")
+#' result3 <- adjusted_KM(data = bmt, time = "t2", status = "d3", group = "arm", covlist = c(
+#'   "z1",
+#'   "z3"
+#' ), stratified_cox = "Yes", reference_group = "arm:2")
+#'}
 #'
+adjusted_KM <- function(data, time, status, group, covlist, stratified_cox = "Yes", reference_group = "G&B") {
+  data = data.frame(data,check.names = F)
+  data = data.frame(na.omit(data[,c(time,status,group,covlist)],check.names = F)) # exclude missing ness on 2/28/2026
+  res <- .adjusted_km(data = data, time = time, status = status, group = group, covlist = covlist, stratified_cox = stratified_cox, reference_group = reference_group)
+  res$time <- signif(res$time, 8)
+  new_time <- data.frame("time" = sort(data[[time]]))
+  new_time$time <- signif(new_time$time, 8)
+  res <- merge(res, new_time, by = "time", all.y = T)
 
-adjusted_KM = function(data,time,status,group,covlist,stratified_cox="Yes",reference_group="G&B"){
-  res = .adjusted_km(data = data,time=time,status=status,group=group,covlist=covlist,stratified_cox=stratified_cox,reference_group=reference_group)
-  res$time = signif(res$time,8)
-  new_time = data.frame("time"=sort(data[[time]]))
-  new_time$time = signif(new_time$time,8)
-  res = merge(res,new_time,by="time",all.y=T)
-
-  for(i in 1:ncol(res)){
-    res[,i] = zoo::na.locf(res[,i],na.rm=F)
-    res[,i] = zoo::na.locf(res[,i],fromLast=T)
+  for (i in 1:ncol(res)) {
+    res[, i] <- zoo::na.locf(res[, i], na.rm = F)
+    res[, i] <- zoo::na.locf(res[, i], fromLast = T)
   }
-  res = data.frame(res[which(!duplicated(res$time)),])
-  colnames(res) = c("time",names(table(data[,group])))
+  res <- data.frame(res[which(!duplicated(res$time)), ])
+  colnames(res) <- c("time", names(table(data[, group])))
   # Generate plot
-  grouplist = group
-  numgroup = length(levels(factor(data[[group]])))
+  grouplist <- group
+  numgroup <- length(levels(factor(data[[group]])))
 
-  res_long = tidyr::gather(res,"class","prob",names(table(data[,group]))[1]:names(table(data[,group]))[numgroup])
+  res_long <- tidyr::gather(res, "class", "prob", names(table(data[, group]))[1]:names(table(data[, group]))[numgroup])
   return(res_long)
 }
-
-
